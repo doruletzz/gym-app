@@ -4,7 +4,7 @@ import { expressjwt as jwt } from 'express-jwt';
 import { SECRET } from '../config';
 
 const getTokenFromCookie = (req: Request) => {
-	// console.log(req.cookies.token);
+	console.log({ ...req.cookies });
 	return req.cookies.token;
 };
 

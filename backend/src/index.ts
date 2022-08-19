@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 mongoose.connect('mongodb://localhost/fitness-plan');
 mongoose.set('debug', true);
 import './model/User';
+import './model/Plan';
 
 import express, { Request } from 'express';
 import cors from 'cors';
@@ -19,7 +20,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
-app.use(cors());
+const whitelist = ['http://localhost:5173'];
+
+app.use(
+	cors({
+		withCredentials: true,
+
+		origin: (origin, callback) => {
+			if (whitelist.includes(origin) || !origin)
+				return callback(null, true);
+
+			callback(new Error('Not allowed by CORS'));
+		},
+	})
+);
 app.use(
 	express.json({
 		type: '*/*',

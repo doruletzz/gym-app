@@ -3,7 +3,7 @@ import { Stack } from "@mui/system";
 import React, { useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../features/app/hooks";
-import { fetchFitnessPlan } from "../../features/plan/slice";
+import { fetchFitnessPlanDisplay } from "../../features/plan/slice";
 import { NutritionCard } from "./NutritionCard";
 import { WorkoutCard } from "./WorkoutCard";
 
@@ -13,7 +13,7 @@ export const Plan = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (token) dispatch(fetchFitnessPlan(token));
+    if (token) dispatch(fetchFitnessPlanDisplay());
   }, []);
 
   if (!token) return <Navigate to="/register" />;

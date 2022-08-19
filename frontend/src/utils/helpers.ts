@@ -1,4 +1,4 @@
-import Cookies from "universal-cookie";
+import Cookies, { CookieGetOptions } from "universal-cookie";
 
 const cookies = new Cookies();
 
@@ -9,6 +9,7 @@ export const getTokenFromCookie = (): string => {
 };
 
 export const setTokenToCookie = (token: string): void => {
+  console.log(token);
   cookies.set("token", token);
 };
 

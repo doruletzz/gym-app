@@ -1,7 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "../../lib/axios/axios";
 import { FitnessPlanState } from "../../pages/Register/RegisterForm";
-import { API_ROUTE_PLAN, API_URL } from "../../utils/constants";
+import {
+  API_ROUTE_NUTRITION_PLAN,
+  API_ROUTE_PLAN,
+  API_ROUTE_WORKOUT_PLAN,
+  API_URL,
+} from "../../utils/constants";
 import { AppThunk } from "../app/store";
 import { login } from "../auth/slice";
 
@@ -19,13 +24,16 @@ export type FetchError = {
 };
 
 interface PlanState {
-  input?: FitnessPlanState;
-  isFetching?: boolean;
-  error?: FetchError;
-  plan?: FitnessPlan;
+  isFetching: boolean;
+  error: FetchError;
+  plan: FitnessPlan;
 }
 
-const initialState: PlanState = {};
+const initialState: PlanState = {
+  isFetching: false,
+  error: { message: "" },
+  plan: { nutrition: {}, workout: {} },
+};
 
 export const planSlice = createSlice({
   name: "plan",
@@ -39,26 +47,46 @@ export const planSlice = createSlice({
     },
     setFitnessPlan: (state, action: PayloadAction<FitnessPlan>) => {
       //TODO: ADD deep copy?
-      return { ...state, plan: action.payload };
+      return { ...state, plan: { ...state.plan, ...action.payload } };
     },
-    setFitnessInput: (state, action: PayloadAction<FitnessPlanState>) => {
-      return { ...state, input: action.payload };
+    setNutritionPlan: (state, action: PayloadAction<NutritionPlan>) => {
+      return {
+        ...state,
+        plan: {
+          ...state.plan,
+          nutrition: { ...state.plan.nutrition, ...action.payload },
+        },
+      };
+    },
+    setWorkoutPlan: (state, action: PayloadAction<WorkoutPlan>) => {
+      return {
+        ...state,
+        plan: {
+          ...state.plan,
+          workout: { ...state.plan.workout, ...action.payload },
+        },
+      };
     },
   },
 });
 
-export const { setFitnessPlan, setFitnessInput, setIsFetching, setError } =
-  planSlice.actions;
+export const {
+  setFitnessPlan,
+  setIsFetching,
+  setNutritionPlan,
+  setWorkoutPlan,
+  setError,
+} = planSlice.actions;
 
 //Actions
-export const fetchFitnessPlan = (token: string): AppThunk => {
+export const fetchFitnessPlanDisplay = (): AppThunk => {
   return async (dispatch) => {
     await dispatch(setIsFetching(true));
     axios
-      .get(API_URL + API_ROUTE_PLAN)
+      .get(API_URL + API_ROUTE_PLAN, { withCredentials: true })
       .then(({ data }) => {
-        dispatch(setFitnessPlan(data));
         console.log(data);
+        dispatch(setFitnessPlan(data));
       })
       .catch((error) => {
         dispatch(setFitnessPlan(error));
@@ -66,6 +94,44 @@ export const fetchFitnessPlan = (token: string): AppThunk => {
       })
       .finally(() => {
         setIsFetching(false);
+      });
+  };
+};
+
+export const fetchNutritionPlanDetails = (slug: string): AppThunk => {
+  return async (dispatch) => {
+    dispatch(setIsFetching(true));
+    axios
+      .get(API_URL + API_ROUTE_NUTRITION_PLAN + "/" + slug)
+      .then((data) => {
+        console.log(data);
+        dispatch(setNutritionPlan(data));
+      })
+      .catch((err) => {
+        console.error(err);
+        dispatch(setError(err));
+      })
+      .finally(() => {
+        dispatch(setIsFetching(false));
+      });
+  };
+};
+
+export const fetchWorkoutPlanDetails = (slug: string): AppThunk => {
+  return async (dispatch) => {
+    await dispatch(setIsFetching(true));
+    axios
+      .get(API_URL + API_ROUTE_WORKOUT_PLAN + "/" + slug)
+      .then((data) => {
+        console.log(data);
+        dispatch(setWorkoutPlan(data));
+      })
+      .catch((err) => {
+        console.error(err);
+        dispatch(setError(err));
+      })
+      .finally(() => {
+        dispatch(setIsFetching(false));
       });
   };
 };

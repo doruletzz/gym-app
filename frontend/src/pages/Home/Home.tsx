@@ -16,7 +16,7 @@ import { ROUTE_PLAN } from "../../utils/constants";
 export const Home = () => {
   const { token, isFetching } = useAppSelector((state) => state.auth);
 
-  const HEADING = "GET YOUR WORKOUT PLAN TODAY";
+  const HEADING = "HEADING TITLE";
 
   const SUBHEADING =
     "Lorem ipsum dolor, sit amet consectetur adipisicing elit. A culpa debitis nisi ex rem possimus. Totam velit necessitatibus error facere voluptates at optio possimus non blanditiis. Sed, culpa. Vitae, temporibus.";

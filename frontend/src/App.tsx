@@ -10,12 +10,14 @@ import Login from "./pages/Login";
 import {
   ROUTE_LOGIN,
   ROUTE_LOGOUT,
+  ROUTE_NUTRITION,
   ROUTE_PLAN,
   ROUTE_PROFILE,
   ROUTE_REGISTER,
 } from "./utils/constants";
 import Profile from "./pages/Profile";
 import Logout from "./pages/Logout";
+import { NutritionPlan } from "./pages/NutritionPlan/NutritionPlan";
 
 function App() {
   return (
@@ -26,6 +28,10 @@ function App() {
         <Route path={ROUTE_PROFILE} element={<Profile />} />
         <Route path={ROUTE_PLAN} element={<Plan />} />
         <Route path={ROUTE_REGISTER} element={<Register />} />
+        <Route
+          path={ROUTE_PLAN + "/" + ROUTE_NUTRITION + "/:slug"}
+          element={<NutritionPlan />}
+        />
         <Route path={ROUTE_LOGIN} element={<Login />} />
         <Route path={ROUTE_LOGOUT} element={<Logout />} />
       </Routes>

@@ -1,10 +1,18 @@
-export const API_URL = import.meta.env.VITE_API_URL;
+export const IS_PROD = import.meta.env.PROD;
 
-export const API_ROUTE_LOGIN = "user/login";
+export const API_URL = IS_PROD
+  ? import.meta.env.VITE_API_URL
+  : "http://localhost:4000";
 
-export const API_ROUTE_REGISTER = "user/register";
+export const API_ROUTE_LOGIN = "/user/login";
 
-export const API_ROUTE_PLAN = "plan";
+export const API_ROUTE_REGISTER = "/user/register";
+
+export const API_ROUTE_WORKOUT_PLAN = "/plan/workout";
+
+export const API_ROUTE_NUTRITION_PLAN = "/plan/nutrition";
+
+export const API_ROUTE_PLAN = "/plan";
 
 export const ROUTE_LOGIN = "login";
 

@@ -1,15 +1,16 @@
 import { timeStamp } from 'console';
-import mongoose, { Schema } from 'mongoose';
-import { IUser } from './type';
+import mongoose, { Schema, SchemaTypes } from 'mongoose';
+import { IUser, IPlan } from './type';
 
 const UserSchema = new mongoose.Schema<IUser>(
 	{
-		username: String,
+		username: { type: String, unique: true },
 		password: String,
 		age: Number,
 		gender: String,
 		height: { type: Number, min: 0 },
 		level: String,
+		plan: { type: Schema.Types.ObjectId, ref: 'Plan' },
 	},
 	{ timestamps: true }
 );

@@ -5,6 +5,7 @@ import { IUser } from '../../model';
 import jsonwebtoken from 'jsonwebtoken';
 import { auth } from '../auth';
 import { SECRET } from '../../config';
+import { JwtPayload } from './type';
 
 const router = express.Router();
 
@@ -36,9 +37,11 @@ router.post(
 
 				console.log(user);
 				const token = jsonwebtoken.sign(
-					{ user: user.username },
+					{ user: user.username } as JwtPayload,
 					SECRET
 				);
+
+				console.log(token, user.username);
 
 				return res.cookie('token', token, { httpOnly: true }).json({
 					token,
@@ -77,7 +80,25 @@ router.post(
 			.then(() => {
 				// TODO: generate Token, throw error if token generation failed
 				console.log(user);
-				return res.json({ token: TOKEN });
+
+				if (!user) {
+					return res
+						.status(422)
+						.json({ error: 'User could not be registered' });
+				}
+
+				console.log(user.username);
+
+				const token = jsonwebtoken.sign(
+					{ user: user.username } as JwtPayload,
+					SECRET
+				);
+
+				console.log(token);
+
+				return res.cookie('token', token, { httpOnly: true }).json({
+					token,
+				});
 			})
 			.catch(next);
 	}

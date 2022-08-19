@@ -39,6 +39,9 @@ export const authSlice = createSlice({
     },
     loadToken: (state) => {
       const token = getTokenFromCookie();
+
+      console.log(token);
+
       return { ...state, token };
     },
     setToken: (state, action: PayloadAction<string>) => {
