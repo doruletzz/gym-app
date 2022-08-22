@@ -12,6 +12,7 @@ import Controller from './controller';
 import cookieParser from 'cookie-parser';
 
 import bodyParser from 'body-parser';
+import { PORT } from './config';
 
 let app = express();
 
@@ -22,18 +23,18 @@ app.use(cookieParser());
 
 const whitelist = ['http://localhost:5173'];
 
-app.use(
-	cors({
-		withCredentials: true,
+const corsConfig = {
+	credentials: true,
 
-		origin: (origin, callback) => {
-			if (whitelist.includes(origin) || !origin)
-				return callback(null, true);
+	origin: (origin, callback) => {
+		if (whitelist.includes(origin) || !origin)
+			return callback(null, origin);
 
-			callback(new Error('Not allowed by CORS'));
-		},
-	})
-);
+		callback(new Error('Not allowed by CORS'));
+	},
+};
+
+app.use(cors(corsConfig));
 app.use(
 	express.json({
 		type: '*/*',
@@ -65,7 +66,8 @@ app.use(Controller);
 // 	res.send('1');
 // });
 
-const PORT = 4000;
+// const PORT = 4000;
 
-console.log(`app running on http://localhost:${PORT}`);
-app.listen(PORT);
+app.listen(PORT, () => {
+	console.log(`API running: 🚀 http://localhost:${PORT}`);
+});

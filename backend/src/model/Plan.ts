@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { INutritionPlan, IPlan, IWorkoutPlan } from './type';
+import { DailyNutritionPlan, INutritionPlan, IPlan, IWorkoutPlan } from './type';
 
 // TODO: add slugify
 const NutritionPlanSchema = new mongoose.Schema<INutritionPlan>({
@@ -9,7 +9,7 @@ const NutritionPlanSchema = new mongoose.Schema<INutritionPlan>({
 	from: Date,
 	to: Date,
 	nutritionist: String,
-	plan: Array<String>,
+	plan: Array<DailyNutritionPlan>,
 });
 
 // TODO: add slugify
@@ -20,10 +20,11 @@ const WorkoutPlanSchema = new mongoose.Schema<IWorkoutPlan>({
 	from: Date,
 	to: Date,
 	trainer: String,
-	plan: Array<String>,
+	plan: Array<DailyNutritionPlan>,
 });
 
 const PlanSchema = new mongoose.Schema<IPlan>({
+	slug: { type: String, lowercase: true, unique: true, required: true},
 	nutritionPlan: { type: Schema.Types.ObjectId, ref: 'NutritionPlan' },
 	workoutPlan: { type: Schema.Types.ObjectId, ref: 'WorkoutPlan' },
 });

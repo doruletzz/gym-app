@@ -18,7 +18,7 @@ router.post(
 	async (
 		req: Request<{}, {}, { username: string; password: string }, {}>,
 		res: Response,
-		next
+		next: NextFunction
 	) => {
 		// console.log(req);
 
@@ -35,9 +35,12 @@ router.post(
 
 				// return res.json({ token: 'aa' });
 
-				console.log(user);
+				console.log(user, user.role);
 				const token = jsonwebtoken.sign(
-					{ user: user.username } as JwtPayload,
+					{
+						user: user.username,
+						role: user.role,
+					} as JwtPayload,
 					SECRET
 				);
 
@@ -53,7 +56,11 @@ router.post(
 
 router.put(
 	'/',
-	async (req: Request<{}, {}, IUser, {}>, res: Response, next) => {
+	async (
+		req: Request<{}, {}, IUser, {}>,
+		res: Response,
+		next: NextFunction
+	) => {
 		res.status(500).json({ message: 'NOT IMPLMENETED' });
 	}
 );
@@ -90,7 +97,10 @@ router.post(
 				console.log(user.username);
 
 				const token = jsonwebtoken.sign(
-					{ user: user.username } as JwtPayload,
+					{
+						user: user.username,
+						role: user.role ?? 'member',
+					} as JwtPayload,
 					SECRET
 				);
 

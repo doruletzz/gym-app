@@ -20,7 +20,6 @@ export const WorkoutCard = () => {
       slug={ROUTE_WORKOUT + slug}
       title={title}
       subtitle={subtitle}
-      content={content}
       imageSrc={imageSrc}
     />
   );

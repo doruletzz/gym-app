@@ -10,9 +10,72 @@ import {
 import { AppThunk } from "../app/store";
 import { login } from "../auth/slice";
 
-type NutritionPlan = {};
+export type DailyWorkoutPlan = {
+  day: number;
+  exercises: Exercise[];
+  details?: string;
+};
 
-type WorkoutPlan = {};
+export type Exercise = {
+  name: string;
+  duration?: string;
+  sets?: number;
+  reps?: number;
+  details?: string;
+};
+
+export type DailyNutritionPlan = {
+  day: number;
+  breakfast: string | Meal;
+  lunch: string | Meal;
+  dinner: string | Meal;
+  snacks: string | Meal;
+  details: string;
+};
+
+export type Meal = {
+  name: string;
+  ingredients: Ingredient[];
+  calories: number;
+  macros?: MacroNutrients;
+  recipeLink?: string;
+  details?: string;
+};
+
+export type MacroNutrients = {
+  proteins: number;
+  carbohydrates: number;
+  fats: number;
+  alcohols: number;
+};
+
+export type Ingredient = {
+  grams: number;
+  name: string;
+};
+
+export type NutritionPlan = {
+  slug?: string;
+  title?: string;
+  subtitle?: string;
+  from?: Date;
+  to?: Date;
+  nutritionist?: string;
+
+  plan?: DailyNutritionPlan[];
+  isDetailed: boolean;
+};
+
+type WorkoutPlan = {
+  slug?: string;
+  title?: string;
+  subtitle?: string;
+  from?: Date;
+  to?: Date;
+  trainer?: string;
+  plan?: DailyWorkoutPlan[];
+  isDetailed: boolean;
+};
 
 type FitnessPlan = {
   nutrition: NutritionPlan;
@@ -32,7 +95,14 @@ interface PlanState {
 const initialState: PlanState = {
   isFetching: false,
   error: { message: "" },
-  plan: { nutrition: {}, workout: {} },
+  plan: {
+    nutrition: {
+      isDetailed: false,
+    },
+    workout: {
+      isDetailed: false,
+    },
+  },
 };
 
 export const planSlice = createSlice({
@@ -86,14 +156,20 @@ export const fetchFitnessPlanDisplay = (): AppThunk => {
       .get(API_URL + API_ROUTE_PLAN, { withCredentials: true })
       .then(({ data }) => {
         console.log(data);
-        dispatch(setFitnessPlan(data));
+        dispatch(
+          setFitnessPlan({
+            slug: data.slug,
+            nutrition: data.nutritionPlan,
+            workout: data.workoutPlan,
+          })
+        );
       })
-      .catch((error) => {
+      .catch(({ error }) => {
         dispatch(setFitnessPlan(error));
         console.error(error);
       })
       .finally(() => {
-        setIsFetching(false);
+        dispatch(setIsFetching(false));
       });
   };
 };
@@ -103,13 +179,13 @@ export const fetchNutritionPlanDetails = (slug: string): AppThunk => {
     dispatch(setIsFetching(true));
     axios
       .get(API_URL + API_ROUTE_NUTRITION_PLAN + "/" + slug)
-      .then((data) => {
+      .then(({ data }) => {
         console.log(data);
         dispatch(setNutritionPlan(data));
       })
-      .catch((err) => {
-        console.error(err);
-        dispatch(setError(err));
+      .catch(({ error }) => {
+        console.error(error);
+        dispatch(setError(error));
       })
       .finally(() => {
         dispatch(setIsFetching(false));
@@ -122,13 +198,13 @@ export const fetchWorkoutPlanDetails = (slug: string): AppThunk => {
     await dispatch(setIsFetching(true));
     axios
       .get(API_URL + API_ROUTE_WORKOUT_PLAN + "/" + slug)
-      .then((data) => {
+      .then(({ data }) => {
         console.log(data);
         dispatch(setWorkoutPlan(data));
       })
-      .catch((err) => {
-        console.error(err);
-        dispatch(setError(err));
+      .catch(({ error }) => {
+        console.error(error);
+        dispatch(setError(error));
       })
       .finally(() => {
         dispatch(setIsFetching(false));
