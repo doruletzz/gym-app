@@ -13,6 +13,92 @@ const User = mongoose.model<IUser>('User');
 
 const TOKEN = '1';
 
+router.get('/', auth.required, async (req: Request, res: Response, next) => {
+	jsonwebtoken.verify(
+		req.cookies.token,
+		SECRET,
+		{
+			algorithms: ['HS256'],
+		},
+		(err, user: JwtPayload) => {
+			if (err) return res.status(403).json({ message: err });
+
+			const username = user.user;
+
+			return User.findOne({ username })
+				.then((userdata) => {
+					if (!userdata)
+						return res
+							.status(404)
+							.json({ message: 'User was not found' });
+					console.log(userdata);
+					return res.json(userdata);
+				})
+				.catch(next);
+		}
+	);
+});
+
+router.put(
+	'/',
+	auth.required,
+	async (req: Request<{}, {}, IUser, {}>, res, next) => {
+		const newUser = req.body;
+
+		if (!newUser.username)
+			return res.status(500).json({ message: 'No username' });
+
+		jsonwebtoken.verify(
+			req.cookies.token,
+			SECRET,
+			{
+				algorithms: ['HS256'],
+			},
+			(err, user: JwtPayload) => {
+				if (err) return res.status(403).json({ message: err });
+
+				const username = user.user;
+				const role = user.role;
+
+				return User.updateOne(
+					{ username },
+					newUser,
+					{ new: true },
+					(err, userdata) => {
+						if (err) return next(err);
+
+						if (!userdata)
+							return res
+								.status(404)
+								.json({ message: 'User was not found' });
+						console.log(userdata);
+
+						if (username === newUser.username)
+							return res.json({ token: req.cookies.token });
+
+						// Change cookie if username is changed
+						const newToken = jsonwebtoken.sign(
+							{
+								user: newUser.username,
+								role: user.role ?? 'member',
+							} as JwtPayload,
+							SECRET
+						);
+
+						console.log(newToken);
+
+						return res
+							.cookie('token', newToken, {
+								httpOnly: true,
+							})
+							.json({ token: newToken });
+					}
+				);
+			}
+		);
+	}
+);
+
 router.post(
 	'/login',
 	async (
@@ -39,7 +125,7 @@ router.post(
 				const token = jsonwebtoken.sign(
 					{
 						user: user.username,
-						role: user.role,
+						role: user.role ?? 'member',
 					} as JwtPayload,
 					SECRET
 				);
@@ -54,16 +140,16 @@ router.post(
 	}
 );
 
-router.put(
-	'/',
-	async (
-		req: Request<{}, {}, IUser, {}>,
-		res: Response,
-		next: NextFunction
-	) => {
-		res.status(500).json({ message: 'NOT IMPLMENETED' });
-	}
-);
+// router.put(
+// 	'/',
+// 	async (
+// 		req: Request<{}, {}, IUser, {}>,
+// 		res: Response,
+// 		next: NextFunction
+// 	) => {
+// 		res.status(500).json({ message: 'NOT IMPLMENETED' });
+// 	}
+// );
 
 router.post(
 	'/register',

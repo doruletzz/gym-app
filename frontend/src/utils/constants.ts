@@ -6,6 +6,8 @@ export const API_URL = IS_PROD
 
 export const API_ROUTE_LOGIN = "/user/login";
 
+export const API_ROUTE_USER = "/user";
+
 export const API_ROUTE_REGISTER = "/user/register";
 
 export const API_ROUTE_WORKOUT_PLAN = "/plan/workout";

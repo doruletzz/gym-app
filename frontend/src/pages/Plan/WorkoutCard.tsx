@@ -3,24 +3,25 @@ import React from "react";
 import Card from "../../components/Card";
 import { ROUTE_PLAN, ROUTE_WORKOUT } from "../../utils/constants";
 
-const title = "Workout Card";
+import { WorkoutPlan } from "../../features/plan/slice";
 
-const subtitle = "Your personalized nutrition card";
+type WorkoutCardProps = {
+  plan: WorkoutPlan;
+  isFetching: boolean;
+};
 
-const content = [<p>subtitle</p>, <p>at</p>];
+export const WorkoutCard = ({ plan, isFetching }: WorkoutCardProps) => {
+  const WORKOUT_CARD_ILLUSTRATION_SRC = "./vite.svg";
 
-const imageSrc = "/vite.svg";
-
-const slug = "/12";
-
-export const WorkoutCard = () => {
   return (
     <Card
-      isFetching={true}
-      slug={ROUTE_WORKOUT + slug}
-      title={title}
-      subtitle={subtitle}
-      imageSrc={imageSrc}
+      isFetching={isFetching}
+      slug={ROUTE_WORKOUT + "/" + plan.slug}
+      title={plan.title ?? ""}
+      subtitle={plan.subtitle ?? ""}
+      from={plan.from}
+      to={plan.to}
+      imageSrc={WORKOUT_CARD_ILLUSTRATION_SRC}
     />
   );
 };

@@ -63,8 +63,9 @@ router.post('/workout', auth.admin, async (req, res, next) => {
 router.get('/', auth.required, async (req, res, next) => {
 	const HARDCODED_SLUG = 'beginner-male-plan';
 
-	(await Plan.findOne({ slug: HARDCODED_SLUG }))
-		.populate(['nutritionPlan', 'workoutPlan'])
+	Plan.findOne({ slug: HARDCODED_SLUG })
+		.populate('nutritionPlan', 'slug title subtitle from to nutritionist')
+		.populate('workoutPlan', 'slug title subtitle from to nutritionist')
 		.then((plan) => {
 			console.log(plan);
 

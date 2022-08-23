@@ -14,10 +14,12 @@ import {
   ROUTE_PLAN,
   ROUTE_PROFILE,
   ROUTE_REGISTER,
+  ROUTE_WORKOUT,
 } from "./utils/constants";
 import Profile from "./pages/Profile";
 import Logout from "./pages/Logout";
-import { NutritionPlan } from "./pages/NutritionPlan/NutritionPlan";
+import NutritionPlan from "./pages/NutritionPlan";
+import WorkoutPlan from "./pages/WorkoutPlan";
 
 function App() {
   return (
@@ -31,6 +33,11 @@ function App() {
         <Route
           path={ROUTE_PLAN + "/" + ROUTE_NUTRITION + "/:slug"}
           element={<NutritionPlan />}
+        />
+
+        <Route
+          path={ROUTE_PLAN + "/" + ROUTE_WORKOUT + "/:slug"}
+          element={<WorkoutPlan />}
         />
         <Route path={ROUTE_LOGIN} element={<Login />} />
         <Route path={ROUTE_LOGOUT} element={<Logout />} />

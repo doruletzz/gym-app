@@ -29,7 +29,7 @@ export const NutritionCard = ({ plan, isFetching }: NutritionCardProps) => {
   return (
     <Card
       isFetching={isFetching}
-      slug={API_ROUTE_NUTRITION_PLAN + "/" + plan.slug ?? ""}
+      slug={ROUTE_NUTRITION + "/" + plan.slug ?? ""}
       title={plan.title ?? ""}
       subtitle={plan.subtitle ?? ""}
       from={plan.from}

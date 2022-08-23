@@ -15,7 +15,7 @@ export const Plan = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (token) dispatch(fetchFitnessPlanDisplay());
+    if (token && !plan.slug) dispatch(fetchFitnessPlanDisplay());
   }, []);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export const Plan = () => {
     <Container>
       <Grid container spacing={4}>
         <Grid item md={6} xs={12}>
-          <WorkoutCard />
+          <WorkoutCard plan={plan.workout} isFetching={isFetching} />
         </Grid>
         <Grid item md={6} xs={12}>
           <NutritionCard plan={plan.nutrition} isFetching={isFetching} />

@@ -66,7 +66,7 @@ export type NutritionPlan = {
   isDetailed: boolean;
 };
 
-type WorkoutPlan = {
+export type WorkoutPlan = {
   slug?: string;
   title?: string;
   subtitle?: string;
@@ -78,6 +78,7 @@ type WorkoutPlan = {
 };
 
 type FitnessPlan = {
+  slug: string;
   nutrition: NutritionPlan;
   workout: WorkoutPlan;
 };
@@ -96,6 +97,7 @@ const initialState: PlanState = {
   isFetching: false,
   error: { message: "" },
   plan: {
+    slug: "",
     nutrition: {
       isDetailed: false,
     },
@@ -124,7 +126,11 @@ export const planSlice = createSlice({
         ...state,
         plan: {
           ...state.plan,
-          nutrition: { ...state.plan.nutrition, ...action.payload },
+          nutrition: {
+            ...state.plan.nutrition,
+            ...action.payload,
+            isDetailed: true,
+          },
         },
       };
     },
@@ -133,14 +139,18 @@ export const planSlice = createSlice({
         ...state,
         plan: {
           ...state.plan,
-          workout: { ...state.plan.workout, ...action.payload },
+          workout: {
+            ...state.plan.workout,
+            ...action.payload,
+            isDetailed: true,
+          },
         },
       };
     },
   },
 });
 
-export const {
+const {
   setFitnessPlan,
   setIsFetching,
   setNutritionPlan,
@@ -178,7 +188,9 @@ export const fetchNutritionPlanDetails = (slug: string): AppThunk => {
   return async (dispatch) => {
     dispatch(setIsFetching(true));
     axios
-      .get(API_URL + API_ROUTE_NUTRITION_PLAN + "/" + slug)
+      .get(API_URL + API_ROUTE_NUTRITION_PLAN + "/" + slug, {
+        withCredentials: true,
+      })
       .then(({ data }) => {
         console.log(data);
         dispatch(setNutritionPlan(data));
@@ -197,7 +209,9 @@ export const fetchWorkoutPlanDetails = (slug: string): AppThunk => {
   return async (dispatch) => {
     await dispatch(setIsFetching(true));
     axios
-      .get(API_URL + API_ROUTE_WORKOUT_PLAN + "/" + slug)
+      .get(API_URL + API_ROUTE_WORKOUT_PLAN + "/" + slug, {
+        withCredentials: true,
+      })
       .then(({ data }) => {
         console.log(data);
         dispatch(setWorkoutPlan(data));
