@@ -18,8 +18,6 @@ type NutritionPlanDetailsState = {
 };
 
 export const NutritionPlanDetails = ({ slug }: NutritionPlanDetailsProps) => {
-  const { token } = useAppSelector((state) => state.auth);
-
   const {
     plan: { nutrition },
     isFetching,
@@ -29,11 +27,8 @@ export const NutritionPlanDetails = ({ slug }: NutritionPlanDetailsProps) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (token && !nutrition.isDetailed)
-      dispatch(fetchNutritionPlanDetails(slug));
+    if (!nutrition.isDetailed) dispatch(fetchNutritionPlanDetails(slug));
   }, []);
-
-  if (!token) return <Navigate to="/" />;
 
   if (isFetching) return <CircularProgress />;
 

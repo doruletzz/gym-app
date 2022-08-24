@@ -1,6 +1,6 @@
 import { useState } from "react";
 import reactLogo from "./assets/react.svg";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
@@ -20,27 +20,37 @@ import Profile from "./pages/Profile";
 import Logout from "./pages/Logout";
 import NutritionPlan from "./pages/NutritionPlan";
 import WorkoutPlan from "./pages/WorkoutPlan";
+import { useAppSelector } from "./features/app/hooks";
 
 function App() {
+  const { token } = useAppSelector((state) => state.auth);
+
   return (
     <>
       <Navbar />
       <Routes>
-        <Route index element={<Home />} />
-        <Route path={ROUTE_PROFILE} element={<Profile />} />
-        <Route path={ROUTE_PLAN} element={<Plan />} />
-        <Route path={ROUTE_REGISTER} element={<Register />} />
-        <Route
-          path={ROUTE_PLAN + "/" + ROUTE_NUTRITION + "/:slug"}
-          element={<NutritionPlan />}
-        />
+        <Route path="*" element={<Home />} />
+        {token ? (
+          <>
+            <Route path={ROUTE_PROFILE} element={<Profile />} />
+            <Route path={ROUTE_PLAN} element={<Plan />} />
+            <Route
+              path={ROUTE_PLAN + "/" + ROUTE_NUTRITION + "/:slug"}
+              element={<NutritionPlan />}
+            />
 
-        <Route
-          path={ROUTE_PLAN + "/" + ROUTE_WORKOUT + "/:slug"}
-          element={<WorkoutPlan />}
-        />
-        <Route path={ROUTE_LOGIN} element={<Login />} />
-        <Route path={ROUTE_LOGOUT} element={<Logout />} />
+            <Route
+              path={ROUTE_PLAN + "/" + ROUTE_WORKOUT + "/:slug"}
+              element={<WorkoutPlan />}
+            />
+            <Route path={ROUTE_LOGOUT} element={<Logout />} />
+          </>
+        ) : (
+          <>
+            <Route path={ROUTE_LOGIN} element={<Login />} />
+            <Route path={ROUTE_REGISTER} element={<Register />} />
+          </>
+        )}
       </Routes>
     </>
   );

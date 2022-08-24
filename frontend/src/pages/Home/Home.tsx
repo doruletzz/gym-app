@@ -16,6 +16,8 @@ import { ROUTE_PLAN } from "../../utils/constants";
 export const Home = () => {
   const { token, isFetching } = useAppSelector((state) => state.auth);
 
+  const HOME_ILLUSTRATION = "/home-illustration.svg";
+
   const HEADING = "HEADING TITLE";
 
   const SUBHEADING =
@@ -27,11 +29,20 @@ export const Home = () => {
 
   return (
     <Container>
-      <Grid container spacing={2}>
-        <Grid item md={8}>
+      <Grid container spacing={2} mt={{ md: 16, xs: 0 }}>
+        <Grid
+          item
+          md={8}
+          textAlign={{ md: "left", xs: "center" }}
+          order={{ md: 1, xs: 2 }}
+        >
           <Box>
-            <Typography variant="h1">{HEADING}</Typography>
-            <Typography variant="subtitle1">{SUBHEADING}</Typography>
+            <Typography variant="h1" color="primary" mb={2}>
+              {HEADING}
+            </Typography>
+            <Typography variant="subtitle1" mb={2}>
+              {SUBHEADING}
+            </Typography>
             {isFetching ? (
               <Skeleton component={Button} />
             ) : (
@@ -41,7 +52,21 @@ export const Home = () => {
             )}
           </Box>
         </Grid>
-        <Grid item></Grid>
+        <Grid
+          item
+          md={4}
+          marginX="auto"
+          marginY="auto"
+          width={{ md: "100%", xs: "50%" }}
+          order={{ md: 2, xs: 1 }}
+        >
+          <Box
+            component="img"
+            alt="home"
+            src={HOME_ILLUSTRATION}
+            width="100%"
+          />
+        </Grid>
       </Grid>
     </Container>
   );

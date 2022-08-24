@@ -6,15 +6,15 @@ import { removeToken } from "../../features/auth/slice";
 import { ROUTE_HOME } from "../../utils/constants";
 
 export const Logout = () => {
-  const { token, isFetching } = useAppSelector((state) => state.auth);
+  // const { token, isFetching } = useAppSelector((state) => state.auth);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (token) dispatch(removeToken());
+    dispatch(removeToken());
   }, []);
 
-  if (token || isFetching) return <CircularProgress />;
+  // if (token || isFetching) return <CircularProgress />;
 
   return <Navigate to={ROUTE_HOME} />;
 };

@@ -24,7 +24,7 @@ type NutritionCardProps = {
 };
 
 export const NutritionCard = ({ plan, isFetching }: NutritionCardProps) => {
-  const NUTRITION_CARD_ILLUSTRATION_SRC = "./vite.svg";
+  const NUTRITION_CARD_ILLUSTRATION_SRC = "./nutrition-illustration.svg";
 
   return (
     <Card

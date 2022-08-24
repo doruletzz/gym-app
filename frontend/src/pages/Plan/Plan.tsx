@@ -8,28 +8,20 @@ import { NutritionCard } from "./NutritionCard";
 import { WorkoutCard } from "./WorkoutCard";
 
 export const Plan = () => {
-  const { token } = useAppSelector((state) => state.auth);
-
   const { plan, isFetching, error } = useAppSelector((state) => state.plan);
 
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (token && !plan.slug) dispatch(fetchFitnessPlanDisplay());
+    if (!plan.slug) dispatch(fetchFitnessPlanDisplay());
   }, []);
-
-  useEffect(() => {
-    console.log(isFetching);
-  }, [isFetching]);
-
-  if (!token) return <Navigate to="/register" />;
 
   if (error.message)
     return <Typography variant="h1">{error.message} </Typography>;
 
   return (
-    <Container>
-      <Grid container spacing={4}>
+    <Container sx={{ height: "95vh" }}>
+      <Grid container spacing={4} pb={4} sx={{ height: "inherit" }}>
         <Grid item md={6} xs={12}>
           <WorkoutCard plan={plan.workout} isFetching={isFetching} />
         </Grid>

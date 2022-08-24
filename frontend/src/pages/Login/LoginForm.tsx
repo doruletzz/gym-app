@@ -1,6 +1,8 @@
 import {
+  Alert,
   Box,
   Button,
+  ButtonGroup,
   CircularProgress,
   FormControl,
   IconButton,
@@ -8,7 +10,9 @@ import {
   InputAdornment,
   InputLabel,
   Paper,
+  Snackbar,
   Stack,
+  styled,
   TextField,
   Typography,
 } from "@mui/material";
@@ -21,7 +25,9 @@ import React, {
 } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../features/app/hooks";
-import { loadToken, login } from "../../features/auth/slice";
+import { loadToken, login, setError } from "../../features/auth/slice";
+
+import ErrorPopup from "../../components/ErrorPopup";
 
 type UserFormState = {
   username: string;
@@ -29,8 +35,16 @@ type UserFormState = {
   isPasswordVisible: boolean;
 };
 
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(6),
+  maxWidth: 960,
+  margin: "0 auto",
+  marginTop: 96,
+  minHeight: 240,
+}));
+
 export const LoginForm = () => {
-  const { token, isFetching, error } = useAppSelector((state) => state.auth);
+  const { isFetching, error } = useAppSelector((state) => state.auth);
 
   const dispatch = useAppDispatch();
 
@@ -39,6 +53,10 @@ export const LoginForm = () => {
     password: "",
     isPasswordVisible: false,
   });
+
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const handleChange =
     (key: keyof UserFormState) => (e: ChangeEvent<HTMLInputElement>) => {
@@ -57,69 +75,87 @@ export const LoginForm = () => {
     dispatch(login(values.username, values.password));
   };
 
-  if (token) return <Navigate to="/plan" />;
+  useEffect(() => {
+    if (error.message) {
+      setIsSnackbarOpen(true);
+      setSnackbarMessage(error.message);
+      dispatch(setError({ message: "" }));
+    }
+  }, [error]);
 
   if (isFetching) return <CircularProgress />;
 
-  if (error.message)
-    return <Typography variant="h1">{error.message} </Typography>;
+  // if (error.message) setIsSnackbarOpen(true);
 
   return (
-    <Paper
-      component="form"
-      onSubmit={handleSubmit}
-      elevation={2}
-      sx={{
-        width: "48rem",
-        height: "24rem",
-        mx: "auto",
-        p: 6,
-      }}
-    >
-      <Box>
-        <Typography variant="h4" mb={2}>
-          Login
-        </Typography>
-        <Stack direction="row" justifyContent="space-between" spacing={4}>
-          <FormControl fullWidth sx={{ mb: 4 }}>
-            <TextField
-              label="username"
-              id="username"
-              required
-              value={values.username}
-              onChange={handleChange("username")}
-              variant="standard"
-            />
-          </FormControl>
+    <>
+      <ErrorPopup
+        isOpen={isSnackbarOpen}
+        setIsOpen={setIsSnackbarOpen}
+        message={snackbarMessage}
+      />
+      <StyledPaper>
+        <Stack
+          component="form"
+          onSubmit={handleSubmit}
+          justifyContent="space-between"
+          sx={{ minHeight: "inherit" }}
+        >
+          <Box>
+            <Typography variant="h4" mb={2}>
+              Login
+            </Typography>
+            <Stack direction="row" justifyContent="space-between" spacing={4}>
+              <FormControl fullWidth sx={{ mb: 4 }}>
+                <TextField
+                  label="username"
+                  id="username"
+                  required
+                  value={values.username}
+                  onChange={handleChange("username")}
+                  variant="standard"
+                />
+              </FormControl>
 
-          <FormControl fullWidth sx={{ mb: 4 }}>
-            <InputLabel htmlFor="password" required>
-              password
-            </InputLabel>
-            <Input
-              id="password"
-              type={!values.isPasswordVisible ? "password" : "text"}
-              value={values.password}
-              required
-              onChange={handleChange("password")}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton onClick={handleShowPassword}>
-                    {values.isPasswordVisible ? "✖️" : "👀"}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
+              <FormControl fullWidth sx={{ mb: 4 }}>
+                <InputLabel htmlFor="password" required>
+                  password
+                </InputLabel>
+                <Input
+                  id="password"
+                  type={!values.isPasswordVisible ? "password" : "text"}
+                  value={values.password}
+                  required
+                  onChange={handleChange("password")}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton onClick={handleShowPassword}>
+                        {values.isPasswordVisible ? "✖️" : "👀"}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </Stack>
+          </Box>
+
+          <ButtonGroup
+            sx={{
+              justifyContent: "space-between",
+              display: "flex",
+              direction: { xs: "row", md: "col" },
+            }}
+          >
+            <Button component={Link} to="/register" variant="outlined">
+              Don't have an account
+            </Button>
+
+            <Button type="submit" variant="contained">
+              Login
+            </Button>
+          </ButtonGroup>
         </Stack>
-
-        <Button type="submit" variant="contained" sx={{ float: "right" }}>
-          Login
-        </Button>
-        <Button component={Link} to="/register">
-          Don't have an account
-        </Button>
-      </Box>
-    </Paper>
+      </StyledPaper>
+    </>
   );
 };

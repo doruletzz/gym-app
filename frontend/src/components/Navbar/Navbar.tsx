@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Container,
+  Grid,
   Icon,
   IconButton,
   Menu,
@@ -14,6 +15,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import { red } from "@mui/material/colors";
 import React, { MouseEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../features/app/hooks";
@@ -26,7 +28,9 @@ import {
   ROUTE_REGISTER,
 } from "../../utils/constants";
 
-const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
+const Offset = styled("div")(({ theme }) => ({
+  height: 90,
+}));
 
 type Setting = {
   key: string;
@@ -53,8 +57,9 @@ export const Navbar = () => {
     useState<HTMLElement | null>(null);
 
   const settings: Setting[] = [
+    { key: "plan", label: "Plan", to: ROUTE_PLAN },
     { key: "profile", label: "Profile", to: ROUTE_PROFILE },
-    { key: "logout", label: "Log Out", to: ROUTE_LOGOUT },
+    { key: "logout", label: "Logout", to: ROUTE_LOGOUT },
   ];
 
   const handleOpenSettingsMenu = (e: MouseEvent<HTMLElement>) => {
@@ -67,51 +72,25 @@ export const Navbar = () => {
     setAnchorSettingsMenu(null);
   };
 
+  const LOGO_SRC = "/logo.svg";
+
   return (
     <>
-      <AppBar position="fixed">
+      <AppBar position="fixed" elevation={0}>
         <Container>
-          <Toolbar disableGutters>
-            <Typography
-              variant="h6"
-              component={Link}
-              to="/"
-              sx={{
-                mr: 2,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
-              }}
-            >
-              LOGO
-            </Typography>
-            <Stack width="100%" direction="row" justifyContent="space-between">
-              <Box marginY="auto">
-                <Typography
-                  mr={2}
-                  variant="body1"
-                  component={Link}
-                  to={ROUTE_PLAN}
-                  sx={{
-                    textDecoration: "none",
-                    color: "inherit",
-                  }}
-                >
-                  plan
-                </Typography>
-
-                <Typography
-                  mr={2}
-                  variant="body1"
-                  component={Link}
-                  to={ROUTE_PROFILE}
-                  sx={{
-                    textDecoration: "none",
-                    color: "inherit",
-                  }}
-                >
-                  profile
-                </Typography>
+          <Toolbar disableGutters sx={{ height: 90 }}>
+            <Stack direction="row" justifyContent="space-between" width="100%">
+              <Box
+                component={Link}
+                to="/"
+                sx={{
+                  marginY: "auto",
+                  color: "inherit",
+                  fill: "inherit",
+                  textDecoration: "none",
+                }}
+              >
+                <Box component="img" src={LOGO_SRC} alt="logo" width="50%" />
               </Box>
 
               {/* <Typography
@@ -174,19 +153,38 @@ export const Navbar = () => {
                   )}
                 </>
               ) : (
-                <Box>
-                  <Button component={Link} to={ROUTE_LOGIN} variant="contained">
-                    login
-                  </Button>
-                  <Button
-                    component={Link}
-                    to={ROUTE_REGISTER}
-                    variant="text"
-                    color="warning"
+                <>
+                  <Grid
+                    gap={3}
+                    justifyContent="end"
+                    container
+                    sx={{
+                      display: { xs: "none", md: "flex" },
+                    }}
                   >
-                    sign up
-                  </Button>
-                </Box>
+                    <Button
+                      component={Link}
+                      to={ROUTE_LOGIN}
+                      variant="outlined"
+                    >
+                      login
+                    </Button>
+                    <Button
+                      component={Link}
+                      to={ROUTE_REGISTER}
+                      variant="contained"
+                    >
+                      sign up
+                    </Button>
+                  </Grid>
+                  <IconButton
+                    sx={{
+                      display: { xs: "flex", md: "none" },
+                    }}
+                  >
+                    -
+                  </IconButton>
+                </>
               )}
             </Stack>
           </Toolbar>

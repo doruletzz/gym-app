@@ -11,7 +11,7 @@ type WorkoutCardProps = {
 };
 
 export const WorkoutCard = ({ plan, isFetching }: WorkoutCardProps) => {
-  const WORKOUT_CARD_ILLUSTRATION_SRC = "./vite.svg";
+  const WORKOUT_CARD_ILLUSTRATION_SRC = "./workout-illustration.svg";
 
   return (
     <Card

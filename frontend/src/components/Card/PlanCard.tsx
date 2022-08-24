@@ -6,6 +6,7 @@ import {
   Skeleton,
   CardActionArea,
   Typography,
+  styled,
 } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -24,6 +25,10 @@ export type PlanCardProps = {
   imageSrc?: string;
 };
 
+const StyledCard = styled(Card)(({ theme }) => ({
+  height: "100%",
+}));
+
 export const PlanCard = ({
   isFetching,
   slug,
@@ -37,14 +42,16 @@ export const PlanCard = ({
   imageSrc,
 }: PlanCardProps) => {
   return (
-    <Card>
-      <CardActionArea component={Link} to={slug}>
-        {
-          <CardHeader
-            title={isFetching ? <Skeleton height={25} /> : title}
-            subheader={isFetching ? <Skeleton height={10} /> : subtitle}
-          />
-        }
+    <StyledCard>
+      <CardActionArea
+        component={Link}
+        to={slug}
+        sx={{ height: "100%", position: "relative " }}
+      >
+        <CardHeader
+          title={isFetching ? <Skeleton height={25} /> : title}
+          subheader={isFetching ? <Skeleton height={10} /> : subtitle}
+        />
         <CardContent>
           {isFetching ? (
             <>
@@ -65,6 +72,7 @@ export const PlanCard = ({
             </>
           )}
         </CardContent>
+
         {isFetching ? (
           <Skeleton height={140} />
         ) : (
@@ -72,12 +80,12 @@ export const PlanCard = ({
             <CardMedia
               component="img"
               image={imageSrc}
-              height={140}
+              height="100%"
               alt={title}
             />
           )
         )}
       </CardActionArea>
-    </Card>
+    </StyledCard>
   );
 };
