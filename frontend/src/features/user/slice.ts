@@ -30,7 +30,7 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setIsFetching: (state, action: PayloadAction<boolean>) => {
-      console.log("set is fetching", action.payload);
+      // console.log("set is fetching", action.payload);
       return { ...state, isFetching: action.payload };
     },
     setError: (state, action: PayloadAction<FetchError>) => {
@@ -38,7 +38,7 @@ export const userSlice = createSlice({
     },
     setUser: (state, action: PayloadAction<UserData>) => {
       // const deepCopy: string = JSON.parse(JSON.stringify(action.payload));
-      // console.log(deepCopy);
+      // // console.log(deepCopy);
       return { ...state, data: action.payload };
     },
   },
@@ -48,13 +48,13 @@ const { setIsFetching, setError, setUser } = userSlice.actions;
 
 export const updateUserData = (userdata: UserData): AppThunk => {
   return async (dispatch) => {
-    console.log("here");
+    // console.log("here");
     dispatch(setIsFetching(true));
     axios
       .put(API_ROUTE_USER, userdata, { withCredentials: true })
       .then(({ data }) => {
         const { token } = data;
-        console.log(token);
+        // console.log(token);
         dispatch(setUser(userdata));
         dispatch(setToken(token));
       })
@@ -63,7 +63,7 @@ export const updateUserData = (userdata: UserData): AppThunk => {
         dispatch(setError(err));
       })
       .finally(() => {
-        console.log("setting to false");
+        // console.log("setting to false");
         dispatch(setIsFetching(false));
       });
   };
@@ -71,13 +71,13 @@ export const updateUserData = (userdata: UserData): AppThunk => {
 
 export const fetchUserData = (): AppThunk => {
   return async (dispatch) => {
-    console.log("here");
+    // console.log("here");
     await dispatch(setIsFetching(true));
     axios
       .get(API_ROUTE_USER, { withCredentials: true })
 
       .then(({ data }) => {
-        console.log(data);
+        // console.log(data);
         dispatch(setUser(data));
       })
       .catch((error) => {
@@ -85,7 +85,7 @@ export const fetchUserData = (): AppThunk => {
         dispatch(setError(error));
       })
       .finally(() => {
-        console.log("setting to false");
+        // console.log("setting to false");
         dispatch(setIsFetching(false));
       });
   };
@@ -98,7 +98,7 @@ export const fetchUserData = (): AppThunk => {
 //       .post(API_URL + API_ROUTE_LOGIN, { username, password })
 //       .then(({ data }) => {
 //         const { token } = data;
-//         console.log(token);
+//         // console.log(token);
 //         dispatch(setToken(token));
 //       })
 //       .catch((error) => {
@@ -118,7 +118,7 @@ export const fetchUserData = (): AppThunk => {
 //       .post(API_URL + API_ROUTE_REGISTER, data)
 //       .then(({ data }) => {
 //         const { token } = data;
-//         console.log(token);
+//         // console.log(token);
 //         dispatch(setToken(token));
 //       })
 //       .catch((error) => {

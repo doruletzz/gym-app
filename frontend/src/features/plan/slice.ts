@@ -77,7 +77,7 @@ export type WorkoutPlan = {
   isDetailed: boolean;
 };
 
-type FitnessPlan = {
+export type FitnessPlan = {
   slug: string;
   nutrition: NutritionPlan;
   workout: WorkoutPlan;
@@ -165,7 +165,7 @@ export const fetchFitnessPlanDisplay = (): AppThunk => {
     axios
       .get(API_URL + API_ROUTE_PLAN, { withCredentials: true })
       .then(({ data }) => {
-        console.log(data);
+        // // console.log(data);
         dispatch(
           setFitnessPlan({
             slug: data.slug,
@@ -192,7 +192,7 @@ export const fetchNutritionPlanDetails = (slug: string): AppThunk => {
         withCredentials: true,
       })
       .then(({ data }) => {
-        console.log(data);
+        // // console.log(data);
         dispatch(setNutritionPlan(data));
       })
       .catch(({ error }) => {
@@ -213,7 +213,7 @@ export const fetchWorkoutPlanDetails = (slug: string): AppThunk => {
         withCredentials: true,
       })
       .then(({ data }) => {
-        console.log(data);
+        // // console.log(data);
         dispatch(setWorkoutPlan(data));
       })
       .catch(({ error }) => {

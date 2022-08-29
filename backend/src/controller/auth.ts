@@ -7,7 +7,7 @@ import { SECRET } from '../config';
 import { JwtPayload } from './api/type';
 
 const getTokenFromCookie = (req: Request) => {
-	console.log({ ...req.cookies });
+	// console.log({ ...req.cookies });
 	return req.cookies.token;
 };
 
@@ -16,7 +16,7 @@ const getAdminTokenFromCookie = (
 	res: Response,
 	next: NextFunction
 ) => {
-	console.log({ ...req.cookies });
+	// console.log({ ...req.cookies });
 
 	const token = req.cookies.token;
 

@@ -29,7 +29,7 @@ function App() {
     <>
       <Navbar />
       <Routes>
-        <Route path="*" element={<Home />} />
+        <Route path="/" element={<Home />} />
         {token ? (
           <>
             <Route path={ROUTE_PROFILE} element={<Profile />} />
@@ -51,6 +51,7 @@ function App() {
             <Route path={ROUTE_REGISTER} element={<Register />} />
           </>
         )}
+        <Route path="*" element={<Home />} />
       </Routes>
     </>
   );

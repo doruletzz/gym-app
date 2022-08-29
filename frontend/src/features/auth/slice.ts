@@ -40,13 +40,13 @@ export const authSlice = createSlice({
     loadToken: (state) => {
       const token = getTokenFromCookie();
 
-      console.log(token);
+      // // console.log(token);
 
       return { ...state, token };
     },
     setToken: (state, action: PayloadAction<string>) => {
       // const deepCopy: string = JSON.parse(JSON.stringify(action.payload));
-      // console.log(deepCopy);
+      // // console.log(deepCopy);
       setTokenToCookie(action.payload);
       return { ...state, token: action.payload };
     },
@@ -67,12 +67,12 @@ export const login = (username: string, password: string): AppThunk => {
       .post(API_URL + API_ROUTE_LOGIN, { username, password })
       .then(({ data }) => {
         const { token } = data;
-        console.log(token);
+        // console.log(token);
         dispatch(setToken(token));
       })
       .catch((error) => {
         console.error(error);
-        dispatch(setError(error));
+        dispatch(setError(error.response.data));
       })
       .finally(() => {
         dispatch(setIsFetching(false));
@@ -87,12 +87,12 @@ export const register = (data: UserData): AppThunk => {
       .post(API_URL + API_ROUTE_REGISTER, data)
       .then(({ data }) => {
         const { token } = data;
-        console.log(token);
+        // // console.log(token);
         dispatch(setToken(token));
       })
       .catch((error) => {
         console.error(error);
-        dispatch(setError(error));
+        dispatch(setError(error.response.data));
       })
       .finally(() => {
         dispatch(setIsFetching(false));

@@ -32,8 +32,8 @@ export const NutritionCard = ({ plan, isFetching }: NutritionCardProps) => {
       slug={ROUTE_NUTRITION + "/" + plan.slug ?? ""}
       title={plan.title ?? ""}
       subtitle={plan.subtitle ?? ""}
-      from={plan.from}
-      to={plan.to}
+      from={plan.from?.toString()}
+      to={plan.to?.toString()}
       imageSrc={NUTRITION_CARD_ILLUSTRATION_SRC}
     />
   );

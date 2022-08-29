@@ -16,33 +16,33 @@ export type Exercise = {
 
 export type DailyNutritionPlan = {
 	day: number;
-	breakfast: string | Meal;
-	lunch: string | Meal;
-	dinner: string | Meal;
-	snacks: string | Meal;
+	breakfast: string;
+	lunch: string;
+	dinner: string;
+	snacks: string;
 	details: string;
 };
 
-export type Meal = {
-	name: string;
-	ingredients: Ingredient[];
-	calories: number;
-	macros?: MacroNutrients;
-	recipeLink?: string;
-	details?: string;
-};
+// export type Meal = {
+// 	name: string;
+// 	ingredients: Ingredient[];
+// 	calories: number;
+// 	macros?: MacroNutrients;
+// 	recipeLink?: string;
+// 	details?: string;
+// };
 
-export type MacroNutrients = {
-	proteins: number;
-	carbohydrates: number;
-	fats: number;
-	alcohols: number;
-};
+// export type MacroNutrients = {
+// 	proteins: number;
+// 	carbohydrates: number;
+// 	fats: number;
+// 	alcohols: number;
+// };
 
-export type Ingredient = {
-	grams: number;
-	name: string;
-};
+// export type Ingredient = {
+// 	grams: number;
+// 	name: string;
+// };
 
 export interface IUser {
 	// id: number;

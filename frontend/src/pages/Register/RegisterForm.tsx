@@ -70,6 +70,17 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   minHeight: 360,
 }));
 
+const SHOW_PASSWORD_ICON_SRC = "/show-icon.svg";
+const HIDE_PASSWORD_ICON_SRC = "/hide-icon.svg";
+
+const SHOW_PASSWORD_ICON = (
+  <Box component="img" src={SHOW_PASSWORD_ICON_SRC} alt="show" />
+);
+
+const HIDE_PASSWORD_ICON = (
+  <Box component="img" src={HIDE_PASSWORD_ICON_SRC} alt="hide" />
+);
+
 export const RegisterForm = () => {
   const { token, isFetching, error } = useAppSelector((state) => state.auth);
 
@@ -121,7 +132,7 @@ export const RegisterForm = () => {
     e.preventDefault();
 
     dispatch(register(values));
-    console.log(values);
+    // console.log(values);
   };
 
   if (isFetching) return <CircularProgress />;
@@ -150,7 +161,7 @@ export const RegisterForm = () => {
               />
             </FormControl>
 
-            <FormControl fullWidth sx={{ mb: 4 }}>
+            <FormControl fullWidth sx={{ m: 1, mb: 4 }} variant="standard">
               <InputLabel htmlFor="password" required>
                 password
               </InputLabel>
@@ -163,7 +174,9 @@ export const RegisterForm = () => {
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton onClick={handleShowPassword}>
-                      {values.isPasswordVisible ? "✖️" : "👀"}
+                      {values.isPasswordVisible
+                        ? HIDE_PASSWORD_ICON
+                        : SHOW_PASSWORD_ICON}
                     </IconButton>
                   </InputAdornment>
                 }

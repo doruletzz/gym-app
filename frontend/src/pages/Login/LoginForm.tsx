@@ -43,6 +43,17 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   minHeight: 240,
 }));
 
+const SHOW_PASSWORD_ICON_SRC = "/show-icon.svg";
+const HIDE_PASSWORD_ICON_SRC = "/hide-icon.svg";
+
+const SHOW_PASSWORD_ICON = (
+  <Box component="img" src={SHOW_PASSWORD_ICON_SRC} alt="show" />
+);
+
+const HIDE_PASSWORD_ICON = (
+  <Box component="img" src={HIDE_PASSWORD_ICON_SRC} alt="hide" />
+);
+
 export const LoginForm = () => {
   const { isFetching, error } = useAppSelector((state) => state.auth);
 
@@ -70,7 +81,7 @@ export const LoginForm = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log(values);
+    // console.log(values);
 
     dispatch(login(values.username, values.password));
   };
@@ -117,7 +128,7 @@ export const LoginForm = () => {
                 />
               </FormControl>
 
-              <FormControl fullWidth sx={{ mb: 4 }}>
+              <FormControl fullWidth sx={{ m: 1, mb: 4 }} variant="standard">
                 <InputLabel htmlFor="password" required>
                   password
                 </InputLabel>
@@ -130,7 +141,9 @@ export const LoginForm = () => {
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton onClick={handleShowPassword}>
-                        {values.isPasswordVisible ? "✖️" : "👀"}
+                        {values.isPasswordVisible
+                          ? HIDE_PASSWORD_ICON
+                          : SHOW_PASSWORD_ICON}
                       </IconButton>
                     </InputAdornment>
                   }

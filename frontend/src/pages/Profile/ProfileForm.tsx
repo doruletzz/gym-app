@@ -60,6 +60,17 @@ const levels = [
 
 export type FitnessPlanState = {};
 
+const SHOW_PASSWORD_ICON_SRC = "/show-icon.svg";
+const HIDE_PASSWORD_ICON_SRC = "/hide-icon.svg";
+
+const SHOW_PASSWORD_ICON = (
+  <Box component="img" src={SHOW_PASSWORD_ICON_SRC} alt="show" />
+);
+
+const HIDE_PASSWORD_ICON = (
+  <Box component="img" src={HIDE_PASSWORD_ICON_SRC} alt="hide" />
+);
+
 const StyledPaper = styled(Paper)(({ theme }) => ({
   paddingRight: theme.spacing(8),
   paddingLeft: theme.spacing(8),
@@ -78,13 +89,13 @@ export const ProfileForm = () => {
 
   useEffect(() => {
     if (!data.username) {
-      console.log("fetching...");
+      // console.log("fetching...");
       dispatch(fetchUserData());
     }
   }, []);
 
   useMemo(() => {
-    console.log("updating state");
+    // console.log("updating state");
     setValues({ ...data });
   }, [data]);
 
@@ -100,7 +111,7 @@ export const ProfileForm = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(updateUserData(values));
-    console.log(values);
+    // console.log(values);
   };
 
   if (isFetching) return <CircularProgress />;
@@ -134,7 +145,7 @@ export const ProfileForm = () => {
               />
             </FormControl>
 
-            <FormControl fullWidth sx={{ mb: 4 }}>
+            <FormControl fullWidth sx={{ m: 1, mb: 4 }} variant="standard">
               <InputLabel htmlFor="password" required>
                 password
               </InputLabel>
@@ -147,7 +158,9 @@ export const ProfileForm = () => {
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton onClick={handleShowPassword}>
-                      {values.isPasswordVisible ? "✖️" : "👀"}
+                      {values.isPasswordVisible
+                        ? HIDE_PASSWORD_ICON
+                        : SHOW_PASSWORD_ICON}
                     </IconButton>
                   </InputAdornment>
                 }

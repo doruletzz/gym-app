@@ -17,13 +17,13 @@ router.post(
 	'/nutrition',
 	auth.admin,
 	async (req: Request<{}, {}, INutritionPlan, {}>, res: Response, next) => {
-		console.log(req.body);
+		// console.log(req.body);
 
 		if (!req.body.slug) return res.status(400).json('Slug not found');
 
 		return NutritionPlan.create(req.body)
 			.then((np) => {
-				console.log(np);
+				// console.log(np);
 
 				res.json(np);
 			})
@@ -32,13 +32,13 @@ router.post(
 );
 
 router.post('/', auth.admin, async (req, res, next) => {
-	console.log(req.body);
+	// console.log(req.body);
 
 	if (!req.body.slug) return res.status(400).json('Slug not found');
 
 	return Plan.create(req.body)
 		.then((wp) => {
-			console.log(wp);
+			// console.log(wp);
 
 			res.json(wp);
 		})
@@ -46,13 +46,13 @@ router.post('/', auth.admin, async (req, res, next) => {
 });
 
 router.post('/workout', auth.admin, async (req, res, next) => {
-	console.log(req.body);
+	// console.log(req.body);
 
 	if (!req.body.slug) return res.status(400).json('Slug not found');
 
 	return WorkoutPlan.create(req.body)
 		.then((wp) => {
-			console.log(wp);
+			// console.log(wp);
 
 			res.json(wp);
 		})
@@ -67,7 +67,7 @@ router.get('/', auth.required, async (req, res, next) => {
 		.populate('nutritionPlan', 'slug title subtitle from to nutritionist')
 		.populate('workoutPlan', 'slug title subtitle from to nutritionist')
 		.then((plan) => {
-			console.log(plan);
+			// console.log(plan);
 
 			if (!plan)
 				return res.json(404).json({ message: 'Plan was not found!' });
@@ -80,10 +80,10 @@ router.get(
 	'/:slug',
 	auth.required,
 	async (req: Request<{}, {}, {}, {}>, res: Response, next) => {
-		console.log(req.body);
+		// console.log(req.body);
 
 		Plan.findById(req.body).then((plan) => {
-			console.log(plan);
+			// console.log(plan);
 
 			if (!plan) return res.json('Plan not found');
 
@@ -107,7 +107,7 @@ router.get(
 						.status(404)
 						.json({ message: 'Nutrition Plan not found' });
 
-				console.log(np);
+				// console.log(np);
 				return res.json(np);
 			})
 			.catch(next);
@@ -125,7 +125,7 @@ router.get(
 						.status(404)
 						.json({ message: 'Workout Plan not found' });
 
-				console.log(wp);
+				// console.log(wp);
 				return res.json(wp);
 			})
 			.catch(next);

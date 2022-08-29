@@ -19,8 +19,8 @@ export const WorkoutCard = ({ plan, isFetching }: WorkoutCardProps) => {
       slug={ROUTE_WORKOUT + "/" + plan.slug}
       title={plan.title ?? ""}
       subtitle={plan.subtitle ?? ""}
-      from={plan.from}
-      to={plan.to}
+      from={plan.from?.toString()}
+      to={plan.to?.toString()}
       imageSrc={WORKOUT_CARD_ILLUSTRATION_SRC}
     />
   );

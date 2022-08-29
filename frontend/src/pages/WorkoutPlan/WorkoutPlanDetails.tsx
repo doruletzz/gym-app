@@ -3,6 +3,7 @@ import {
   CircularProgress,
   List,
   ListItem,
+  Table,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -12,6 +13,8 @@ import {
   fetchNutritionPlanDetails,
   fetchWorkoutPlanDetails,
 } from "../../features/plan/slice";
+
+import { EnhancedTable, CollapsableTable } from "../../components/Table";
 
 type WorkoutPlanDetailsProps = {
   slug: string;
@@ -50,24 +53,38 @@ export const WorkoutPlanDetails = ({ slug }: WorkoutPlanDetailsProps) => {
       <Typography variant="subtitle1">
         {workout.subtitle}, by {workout.trainer}
       </Typography>
-      <Typography variant="subtitle2">
-        from: {workout.from}, to: {workout.to}
-      </Typography>
-      {workout.plan &&
-        workout.plan.map((entry) => (
-          <>
-            <Typography key={entry.day} variant="body1">
-              Day {entry.day}:{entry.details}
-            </Typography>
-            <List>
-              {entry.exercises.map((exercise) => (
-                <ListItem>
-                  {exercise.name} sets: {exercise.sets}, reps: {exercise.reps}
-                </ListItem>
-              ))}
-            </List>
-          </>
-        ))}
+      {workout.from && workout.to && (
+        <Typography variant="body1">
+          from: {workout.from.split("T")[0].replaceAll("-", "/")}, to:{" "}
+          {workout.to.split("T")[0].replaceAll("-", "/")}
+        </Typography>
+      )}
+      <br />
+      {workout.plan && (
+        <Box>
+          <Typography variant="h6">Plan:</Typography>
+          {workout.plan.map((entry, idx) => (
+            <CollapsableTable
+              key={idx}
+              columns={[""]}
+              rowsCollapsed={[
+                <Typography key={entry.day} variant="body1" my="auto">
+                  Day: {entry.day}
+                </Typography>,
+              ]}
+              rowsExpanded={[
+                <>
+                  <EnhancedTable
+                    columns={Object.keys(entry.exercises[0])}
+                    rows={entry.exercises}
+                    caption={"Note: " + entry.details}
+                  />
+                </>,
+              ]}
+            />
+          ))}
+        </Box>
+      )}
       {/* <Typography variant="h4">{workout.title}</Typography> */}
     </Box>
   );

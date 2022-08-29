@@ -21,6 +21,8 @@ router.get('/', auth.required, async (req: Request, res: Response, next) => {
 			algorithms: ['HS256'],
 		},
 		(err, user: JwtPayload) => {
+			// console.log(err);
+
 			if (err) return res.status(403).json({ message: err });
 
 			const username = user.user;
@@ -31,7 +33,7 @@ router.get('/', auth.required, async (req: Request, res: Response, next) => {
 						return res
 							.status(404)
 							.json({ message: 'User was not found' });
-					console.log(userdata);
+					// console.log(userdata);
 					return res.json(userdata);
 				})
 				.catch(next);
@@ -71,7 +73,7 @@ router.put(
 							return res
 								.status(404)
 								.json({ message: 'User was not found' });
-						console.log(userdata);
+						// console.log(userdata);
 
 						if (username === newUser.username)
 							return res.json({ token: req.cookies.token });
@@ -85,7 +87,7 @@ router.put(
 							SECRET
 						);
 
-						console.log(newToken);
+						// console.log(newToken);
 
 						return res
 							.cookie('token', newToken, {
@@ -106,7 +108,7 @@ router.post(
 		res: Response,
 		next: NextFunction
 	) => {
-		// console.log(req);
+		// // console.log(req);
 
 		User.findOne({
 			username: req.body.username,
@@ -116,12 +118,14 @@ router.post(
 				// TODO: generate Token, throw error if token generation failed
 
 				if (!user) {
-					return res.status(422).json({ error: 'Wrong Credentials' });
+					return res
+						.status(422)
+						.json({ message: 'Wrong Credentials' });
 				}
 
 				// return res.json({ token: 'aa' });
 
-				console.log(user, user.role);
+				// console.log(user, user.role);
 				const token = jsonwebtoken.sign(
 					{
 						user: user.username,
@@ -130,13 +134,13 @@ router.post(
 					SECRET
 				);
 
-				console.log(token, user.username);
+				// console.log(token, user.username);
 
 				return res.cookie('token', token, { httpOnly: true }).json({
 					token,
 				});
 			})
-			.catch((err) => res.status(422).json(err));
+			.catch(next);
 	}
 );
 
@@ -158,7 +162,11 @@ router.post(
 		res: Response,
 		next: NextFunction
 	) => {
-		console.log(req.body);
+		// console.log(req.body);
+
+		const isUsernameUnique =
+			User.findOne({ username: req.body.username }) !== null;
+
 		let user = new User();
 
 		user.username = req.body.username;
@@ -169,34 +177,38 @@ router.post(
 		user.height = req.body.height;
 		user.level = req.body.level;
 
-		user.save()
-			.then(() => {
-				// TODO: generate Token, throw error if token generation failed
-				console.log(user);
+		user.save((err, user) => {
+			// TODO: generate Token, throw error if token generation failed
+			// console.log(user);
 
-				if (!user) {
-					return res
-						.status(422)
-						.json({ error: 'User could not be registered' });
-				}
+			if (err) {
+				return res
+					.status(422)
+					.json({ message: 'Username already taken' });
+			}
 
-				console.log(user.username);
+			if (!user) {
+				return res
+					.status(422)
+					.json({ message: 'User could not be registered' });
+			}
 
-				const token = jsonwebtoken.sign(
-					{
-						user: user.username,
-						role: user.role ?? 'member',
-					} as JwtPayload,
-					SECRET
-				);
+			// console.log(user.username);
 
-				console.log(token);
+			const token = jsonwebtoken.sign(
+				{
+					user: user.username,
+					role: user.role ?? 'member',
+				} as JwtPayload,
+				SECRET
+			);
 
-				return res.cookie('token', token, { httpOnly: true }).json({
-					token,
-				});
-			})
-			.catch(next);
+			// console.log(token);
+
+			return res.cookie('token', token, { httpOnly: true }).json({
+				token,
+			});
+		});
 	}
 );
 

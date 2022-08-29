@@ -47,19 +47,29 @@ export const Navbar = () => {
     if (!token) dispatch(loadToken());
   }, []);
 
-  const AVATAR_SRC =
-    "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80";
-
+  const AVATAR_SRC = "/avatar.png";
   const [isSettingsMenuVisible, setIsSettingsMenuVisible] =
     useState<boolean>(false);
 
   const [anchorSettingsMenu, setAnchorSettingsMenu] =
     useState<HTMLElement | null>(null);
 
+  const [isExpandMenuVisible, setIsExpandMenuVisible] =
+    useState<boolean>(false);
+
+  const [anchorExpandMenu, setAnchorExpandMenu] = useState<HTMLElement | null>(
+    null
+  );
+
   const settings: Setting[] = [
     { key: "plan", label: "Plan", to: ROUTE_PLAN },
     { key: "profile", label: "Profile", to: ROUTE_PROFILE },
     { key: "logout", label: "Logout", to: ROUTE_LOGOUT },
+  ];
+
+  const expands: Setting[] = [
+    { key: "login", label: "Login", to: ROUTE_LOGIN },
+    { key: "register", label: "Register", to: ROUTE_REGISTER },
   ];
 
   const handleOpenSettingsMenu = (e: MouseEvent<HTMLElement>) => {
@@ -72,7 +82,23 @@ export const Navbar = () => {
     setAnchorSettingsMenu(null);
   };
 
+  const handleOpenExpandMenu = (e: MouseEvent<HTMLElement>) => {
+    setIsExpandMenuVisible(true);
+    setAnchorExpandMenu(e.currentTarget);
+  };
+
+  const handleCloseExpandMenu = (e: MouseEvent<HTMLElement>) => {
+    setIsExpandMenuVisible(false);
+    setAnchorExpandMenu(null);
+  };
+
+  const EXPAND_ICON_SRC = "/expand-icon.svg";
   const LOGO_SRC = "/logo.svg";
+
+  const EXPAND_ICON = (
+    <Box component="img" src={EXPAND_ICON_SRC} alt="icon" height={16} />
+  );
+  const LOGO = <Box component="img" src={LOGO_SRC} alt="logo" />;
 
   return (
     <>
@@ -177,13 +203,42 @@ export const Navbar = () => {
                       sign up
                     </Button>
                   </Grid>
-                  <IconButton
-                    sx={{
-                      display: { xs: "flex", md: "none" },
-                    }}
-                  >
-                    -
-                  </IconButton>
+
+                  <Box>
+                    <IconButton
+                      onClick={handleOpenExpandMenu}
+                      sx={{
+                        display: { xs: "flex", md: "none" },
+                      }}
+                    >
+                      {EXPAND_ICON}
+                    </IconButton>
+                    <Menu
+                      open={isExpandMenuVisible}
+                      anchorEl={anchorExpandMenu}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "center",
+                      }}
+                      keepMounted
+                      transformOrigin={{
+                        vertical: "top",
+                        horizontal: "center",
+                      }}
+                      onClose={handleCloseExpandMenu}
+                    >
+                      {expands.map((expand) => (
+                        <MenuItem
+                          key={expand.key}
+                          onClick={handleCloseExpandMenu}
+                          component={Link}
+                          to={expand.to}
+                        >
+                          {expand.label}
+                        </MenuItem>
+                      ))}
+                    </Menu>
+                  </Box>
                 </>
               )}
             </Stack>

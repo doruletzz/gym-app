@@ -17,7 +17,17 @@ import "./index.css";
 const theme = createTheme({
   typography: {
     h1: {
-      fontSize: 84,
+      fontSize: 72,
+      fontWeight: 700,
+    },
+    h4: {
+      fontWeight: 600,
+    },
+    h5: {
+      fontWeight: 600,
+    },
+    h6: {
+      fontWeight: 600,
     },
     subtitle1: {
       fontSize: 16,
@@ -41,6 +51,7 @@ const theme = createTheme({
     },
   },
   components: {
+    MuiCard: {},
     MuiFormGroup: {
       styleOverrides: {
         root: {

@@ -54,14 +54,14 @@ app.use(Controller);
 // app.post(
 // 	'/login',
 // 	(req: Request<{}, {}, { username: string; password: string }, {}>, res) => {
-// 		console.log(req.body);
+// 		// console.log(req.body);
 
 // 		res.send('1');
 // 	}
 // );
 
 // app.post('/register', (req, res) => {
-// 	console.log(req.params);
+// 	// console.log(req.params);
 
 // 	res.send('1');
 // });
@@ -69,5 +69,5 @@ app.use(Controller);
 // const PORT = 4000;
 
 app.listen(PORT, () => {
-	console.log(`API running: 🚀 http://localhost:${PORT}`);
+	// console.log(`API running: 🚀 http://localhost:${PORT}`);
 });

@@ -16,8 +16,8 @@ export type PlanCardProps = {
   slug: string;
   subtitle: string;
   title?: string;
-  from?: Date;
-  to?: Date;
+  from?: string;
+  to?: string;
   age?: number;
   level?: "beginner" | "intermediate" | "advanced";
   gender?: "M" | "F" | "O";
@@ -62,13 +62,16 @@ export const PlanCard = ({
             </>
           ) : (
             <>
-              {age && <Typography variant="body1">{age}</Typography>}
-              {height && <Typography variant="body1">{height}</Typography>}
-              {gender && <Typography variant="body1">{gender}</Typography>}
-              {from && (
-                <Typography variant="body1">{from.valueOf()}</Typography>
+              {from && to && (
+                <Typography variant="body1">
+                  from: {from.split("T")[0].replaceAll("-", "/")}, to:{" "}
+                  {to.split("T")[0].replaceAll("-", "/")}
+                </Typography>
               )}
-              {to && <Typography variant="body1">{to.valueOf()}</Typography>}
+              {/* {from && ( */}
+              {/* <Typography variant="body1">{from.valueOf()}</Typography> */}
+              {/* )} */}
+              {/* {to && <Typography variant="body1">{to.valueOf()}</Typography>} */}
             </>
           )}
         </CardContent>

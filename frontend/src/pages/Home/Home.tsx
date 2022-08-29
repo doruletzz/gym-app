@@ -18,7 +18,7 @@ export const Home = () => {
 
   const HOME_ILLUSTRATION = "/home-illustration.svg";
 
-  const HEADING = "HEADING TITLE";
+  const HEADING = "TRANSFORM YOUR BODY, TODAY!";
 
   const SUBHEADING =
     "Lorem ipsum dolor, sit amet consectetur adipisicing elit. A culpa debitis nisi ex rem possimus. Totam velit necessitatibus error facere voluptates at optio possimus non blanditiis. Sed, culpa. Vitae, temporibus.";
