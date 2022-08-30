@@ -53,7 +53,7 @@ export interface IUser {
 	gender: 'M' | 'F' | 'O';
 	height: number;
 	level: 'beginner' | 'intermediate' | 'advanced';
-	plan: Types.ObjectId;
+	plan: Types.ObjectId | string;
 }
 
 export interface IPlan {

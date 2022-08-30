@@ -11,19 +11,26 @@ import {
   ROUTE_LOGIN,
   ROUTE_LOGOUT,
   ROUTE_NUTRITION,
+  ROUTE_NUTRITION_ADD,
   ROUTE_PLAN,
+  ROUTE_PLANS,
+  ROUTE_PLANS_ADD,
   ROUTE_PROFILE,
   ROUTE_REGISTER,
   ROUTE_WORKOUT,
+  ROUTE_WORKOUT_ADD,
 } from "./utils/constants";
 import Profile from "./pages/Profile";
 import Logout from "./pages/Logout";
 import NutritionPlan from "./pages/NutritionPlan";
 import WorkoutPlan from "./pages/WorkoutPlan";
 import { useAppSelector } from "./features/app/hooks";
+import Plans from "./pages/Plans";
+import PlanAdd from "./pages/PlanAdd";
+import WorkoutAdd from "./pages/WorkoutAdd";
 
 function App() {
-  const { token } = useAppSelector((state) => state.auth);
+  const { token, role } = useAppSelector((state) => state.auth);
 
   return (
     <>
@@ -44,6 +51,14 @@ function App() {
               element={<WorkoutPlan />}
             />
             <Route path={ROUTE_LOGOUT} element={<Logout />} />
+            {role === "admin" && (
+              <>
+                <Route path={ROUTE_PLANS} element={<Plans />} />
+                <Route path={ROUTE_PLANS_ADD} element={<PlanAdd />} />
+                {/* <Route path={ROUTE_NUTRITION_ADD} element={<NutritionAdd />} /> */}
+                <Route path={ROUTE_WORKOUT_ADD} element={<WorkoutAdd />} />
+              </>
+            )}
           </>
         ) : (
           <>

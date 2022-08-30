@@ -6,6 +6,7 @@ import jsonwebtoken from 'jsonwebtoken';
 import { auth } from '../auth';
 import { SECRET } from '../../config';
 import { JwtPayload } from './type';
+import { GET_DEFAULT_PLAN } from '../../utils';
 
 const router = express.Router();
 
@@ -28,12 +29,18 @@ router.get('/', auth.required, async (req: Request, res: Response, next) => {
 			const username = user.user;
 
 			return User.findOne({ username })
-				.then((userdata) => {
+				.then(async (userdata: IUser) => {
 					if (!userdata)
 						return res
 							.status(404)
 							.json({ message: 'User was not found' });
-					// console.log(userdata);
+
+					if (!userdata.plan) {
+						const plan = await GET_DEFAULT_PLAN();
+						userdata.plan = plan;
+						return res.json(userdata);
+					}
+
 					return res.json(userdata);
 				})
 				.catch(next);
@@ -45,10 +52,12 @@ router.put(
 	'/',
 	auth.required,
 	async (req: Request<{}, {}, IUser, {}>, res, next) => {
-		const newUser = req.body;
+		const newUser = JSON.parse(JSON.stringify(req.body));
 
 		if (!newUser.username)
 			return res.status(500).json({ message: 'No username' });
+
+		newUser.plan = await GET_DEFAULT_PLAN();
 
 		jsonwebtoken.verify(
 			req.cookies.token,
@@ -176,6 +185,7 @@ router.post(
 		user.gender = req.body.gender;
 		user.height = req.body.height;
 		user.level = req.body.level;
+		user.plan = await GET_DEFAULT_PLAN();
 
 		user.save((err, user) => {
 			// TODO: generate Token, throw error if token generation failed

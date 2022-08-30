@@ -8,12 +8,14 @@ import {
 // ...
 import authReducer from "../auth";
 import planReducer from "../plan";
+import plansReducer from "../plans";
 import userReducer from "../user";
 
 const combinedReducer = combineReducers({
   auth: authReducer,
   plan: planReducer,
   user: userReducer,
+  plans: plansReducer,
 });
 
 const rootReducer: Reducer = (state: RootState, action: AnyAction) => {

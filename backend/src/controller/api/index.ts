@@ -5,8 +5,8 @@ import { UserController } from './users';
 
 const router = express.Router();
 
-router.use('/user', UserController);
+router.use('/users', UserController);
 
-router.use('/plan', PlanController);
+router.use('/plans', PlanController);
 
 export const Controller = router;

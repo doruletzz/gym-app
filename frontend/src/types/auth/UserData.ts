@@ -5,6 +5,7 @@ export type UserData = {
   gender: "M" | "F" | "O";
   height: number;
   level: "beginner" | "intermidate" | "advanced";
+  plan?: string;
   isPasswordVisible?: boolean;
 };
 

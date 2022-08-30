@@ -4,17 +4,25 @@ import React, { useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../features/app/hooks";
 import { fetchFitnessPlanDisplay } from "../../features/plan/slice";
+import { fetchUserData } from "../../features/user/slice";
 import { NutritionCard } from "./NutritionCard";
 import { WorkoutCard } from "./WorkoutCard";
 
 export const Plan = () => {
   const { plan, isFetching, error } = useAppSelector((state) => state.plan);
 
+  const { data } = useAppSelector((state) => state.user);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (!plan.slug) dispatch(fetchFitnessPlanDisplay());
+    if (!data.username) dispatch(fetchUserData());
   }, []);
+
+  useEffect(() => {
+    if (data.username && !plan.slug)
+      dispatch(fetchFitnessPlanDisplay(data.plan));
+  }, [data]);
 
   if (error.message)
     return <Typography variant="h1">{error.message} </Typography>;

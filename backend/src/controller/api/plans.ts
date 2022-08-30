@@ -59,11 +59,13 @@ router.post('/workout', auth.admin, async (req, res, next) => {
 		.catch(next);
 });
 
-// TODO: MANAGE PLAN ASSIGNMENT FOR THE USER ON LOGIN AND GET PLAN ID FROM TOKEN
-router.get('/', auth.required, async (req, res, next) => {
-	const HARDCODED_SLUG = 'beginner-male-plan';
+// router.get('/all');
 
-	Plan.findOne({ slug: HARDCODED_SLUG })
+router.get('/:id', auth.required, async (req, res, next) => {
+	// const HARDCODED_SLUG = 'beginner-male-plan';
+
+	console.log('params', req.params.id);
+	Plan.findOne({ id: req.params.id })
 		.populate('nutritionPlan', 'slug title subtitle from to nutritionist')
 		.populate('workoutPlan', 'slug title subtitle from to nutritionist')
 		.then((plan) => {
@@ -76,21 +78,53 @@ router.get('/', auth.required, async (req, res, next) => {
 		});
 });
 
-router.get(
-	'/:slug',
-	auth.required,
-	async (req: Request<{}, {}, {}, {}>, res: Response, next) => {
-		// console.log(req.body);
+// router.get(
+// 	'/:slug',
+// 	auth.required,
+// 	async (req: Request<{}, {}, {}, {}>, res: Response, next) => {
+// 		// console.log(req.body);
 
-		Plan.findById(req.body).then((plan) => {
-			// console.log(plan);
+// 		Plan.findById(req.body).then((plan) => {
+// 			// console.log(plan);
 
-			if (!plan) return res.json('Plan not found');
+// 			if (!plan) return res.json('Plan not found');
 
-			return res.json(plan);
-		});
-	}
-);
+// 			return res.json(plan);
+// 		});
+// 	}
+// );
+
+router.get('/', auth.admin, async (req, res, next) => {
+	Plan.find()
+		.populate('nutritionPlan', 'slug title subtitle from to nutritionist')
+		.populate('workoutPlan', 'slug title subtitle from to nutritionist')
+		.then((plans) => {
+			return res.json(plans);
+		})
+		.catch((err) =>
+			res.status(422).json({ message: 'Unable to get all plans' })
+		);
+});
+
+router.get('/nutrition/', auth.admin, async (req, res, next) => {
+	NutritionPlan.find()
+		.then((plans) => {
+			return res.json(plans);
+		})
+		.catch((err) =>
+			res.status(422).json({ message: 'Unable to get all plans' })
+		);
+});
+
+router.get('/workout/', auth.admin, async (req, res, next) => {
+	WorkoutPlan.find()
+		.then((plans) => {
+			return res.json(plans);
+		})
+		.catch((err) =>
+			res.status(422).json({ message: 'Unable to get all plans' })
+		);
+});
 
 router.get(
 	'/nutrition/:slug',

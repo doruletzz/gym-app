@@ -24,6 +24,7 @@ import {
   ROUTE_LOGIN,
   ROUTE_LOGOUT,
   ROUTE_PLAN,
+  ROUTE_PLANS,
   ROUTE_PROFILE,
   ROUTE_REGISTER,
 } from "../../utils/constants";
@@ -34,12 +35,15 @@ const Offset = styled("div")(({ theme }) => ({
 
 type Setting = {
   key: string;
+  role?: "member" | "developer" | "admin";
   label: string;
   to: string;
 };
 
 export const Navbar = () => {
-  const { isFetching, error, token } = useAppSelector((state) => state.auth);
+  const { isFetching, error, token, role } = useAppSelector(
+    (state) => state.auth
+  );
 
   const dispatch = useAppDispatch();
 
@@ -64,6 +68,7 @@ export const Navbar = () => {
   const settings: Setting[] = [
     { key: "plan", label: "Plan", to: ROUTE_PLAN },
     { key: "profile", label: "Profile", to: ROUTE_PROFILE },
+    { key: "plans", role: "admin", label: "Plans", to: ROUTE_PLANS },
     { key: "logout", label: "Logout", to: ROUTE_LOGOUT },
   ];
 
@@ -164,16 +169,20 @@ export const Navbar = () => {
                         }}
                         onClose={handleCloseSettingsMenu}
                       >
-                        {settings.map((setting) => (
-                          <MenuItem
-                            key={setting.key}
-                            onClick={handleCloseSettingsMenu}
-                            component={Link}
-                            to={setting.to}
-                          >
-                            {setting.label}
-                          </MenuItem>
-                        ))}
+                        {settings
+                          .filter(
+                            (setting) => !setting.role || setting.role === role
+                          )
+                          .map((setting) => (
+                            <MenuItem
+                              key={setting.key}
+                              onClick={handleCloseSettingsMenu}
+                              component={Link}
+                              to={setting.to}
+                            >
+                              {setting.label}
+                            </MenuItem>
+                          ))}
                       </Menu>
                     </Box>
                   )}

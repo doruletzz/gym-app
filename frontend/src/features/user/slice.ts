@@ -3,7 +3,7 @@ import axios from "../../lib/axios/axios";
 import { UserData } from "../../types/auth/UserData";
 import { API_ROUTE_USER } from "../../utils/constants";
 import { AppThunk } from "../app/store";
-import { setToken } from "../auth/slice";
+import { setRole, setToken } from "../auth/slice";
 import { FetchError } from "../plan/slice";
 
 type UserState = {
@@ -53,9 +53,10 @@ export const updateUserData = (userdata: UserData): AppThunk => {
     axios
       .put(API_ROUTE_USER, userdata, { withCredentials: true })
       .then(({ data }) => {
-        const { token } = data;
-        // console.log(token);
+        const { token, role } = data;
+        console.log(data);
         dispatch(setUser(userdata));
+        dispatch(setRole(role ?? "member"));
         dispatch(setToken(token));
       })
       .catch((err) => {
@@ -78,7 +79,11 @@ export const fetchUserData = (): AppThunk => {
 
       .then(({ data }) => {
         // console.log(data);
+        console.log(data);
+        const { role } = data;
+
         dispatch(setUser(data));
+        dispatch(setRole(role ?? "member"));
       })
       .catch((error) => {
         console.error(error);

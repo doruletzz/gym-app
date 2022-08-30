@@ -90,21 +90,13 @@ export type FetchError = {
 interface PlanState {
   isFetching: boolean;
   error: FetchError;
-  plan: FitnessPlan;
+  plans: FitnessPlan[];
 }
 
 const initialState: PlanState = {
   isFetching: false,
   error: { message: "" },
-  plan: {
-    slug: "",
-    nutrition: {
-      isDetailed: false,
-    },
-    workout: {
-      isDetailed: false,
-    },
-  },
+  plans: [],
 };
 
 export const planSlice = createSlice({
@@ -118,39 +110,42 @@ export const planSlice = createSlice({
       return { ...state, error: action.payload };
     },
     setFitnessPlan: (state, action: PayloadAction<FitnessPlan>) => {
-      return { ...state, plan: { ...state.plan, ...action.payload } };
+      return { ...state, plans: [...state.plans, action.payload] };
+    },
+    setFitnessPlans: (state, action: PayloadAction<FitnessPlan[]>) => {
+      return { ...state, plans: action.payload };
     },
     setNutritionPlan: (state, action: PayloadAction<NutritionPlan>) => {
-      return {
-        ...state,
-        plan: {
-          ...state.plan,
-          nutrition: {
-            ...state.plan.nutrition,
-            ...action.payload,
-            isDetailed: true,
-          },
-        },
-      };
+      //   return {
+      //     ...state,
+      //     plan: {
+      //       ...state.plan,
+      //       nutrition: {
+      //         ...state.plan.nutrition,
+      //         ...action.payload,
+      //         isDetailed: true,
+      //       },
+      //     },
+      //   };
     },
     setWorkoutPlan: (state, action: PayloadAction<WorkoutPlan>) => {
-      return {
-        ...state,
-        plan: {
-          ...state.plan,
-          workout: {
-            ...state.plan.workout,
-            ...action.payload,
-            isDetailed: true,
-          },
-        },
-      };
+      //   return {
+      //     ...state,
+      //     plan: {
+      //       ...state.plan,
+      //       workout: {
+      //         ...state.plan.workout,
+      //         ...action.payload,
+      //         isDetailed: true,
+      //       },
+      //     },
+      //   };
     },
   },
 });
 
 const {
-  setFitnessPlan,
+  setFitnessPlans,
   setIsFetching,
   setNutritionPlan,
   setWorkoutPlan,
@@ -158,19 +153,23 @@ const {
 } = planSlice.actions;
 
 //Actions
-export const fetchFitnessPlanDisplay = (id: string): AppThunk => {
+export const fetchAllFitnessPlans = (): AppThunk => {
   return async (dispatch) => {
     await dispatch(setIsFetching(true));
     axios
-      .get(API_URL + API_ROUTE_PLAN + "/" + id, { withCredentials: true })
+      .get(API_URL + API_ROUTE_PLAN, { withCredentials: true })
       .then(({ data }) => {
         console.log(data);
         dispatch(
-          setFitnessPlan({
-            slug: data.slug,
-            nutrition: data.nutritionPlan,
-            workout: data.workoutPlan,
-          })
+          setFitnessPlans(
+            data.map((plan) => {
+              return {
+                slug: plan.slug,
+                nutrition: plan.nutritionPlan,
+                workout: plan.workoutPlan,
+              } as FitnessPlan;
+            })
+          )
         );
       })
       .catch(({ error }) => {
